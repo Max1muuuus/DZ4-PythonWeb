@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Керування стравами — Trattoria{% endblock %}
+{% block content %}
+    <div class="section-title">
+        <h2>Керування стравами</h2>
+        <p>Створюйте, редагуйте та видаляйте позиції меню</p>
+    </div>
+    <p><a class="btn" href="{{ url_for('create_dish') }}">Додати страву</a></p>
+    <div class="table-wrap">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Страва</th>
+                    <th>Категорія</th>
+                    <th>Ціна</th>
+                    <th>Статус</th>
+                    <th>Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dish in dishes %}
+                    <tr class="{{ '' if dish.is_available else 'hidden-row' }}">
+                        <td>{{ dish.emoji }} {{ dish.name }}</td>
+                        <td>{{ dish.category.name }}</td>
+                        <td>{{ dish.price }} грн</td>
+                        <td>
+                            <span class="availability {{ '' if dish.is_available else 'unavailable' }}">
+                                {{ 'Доступна' if dish.is_available else 'Прихована' }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <a href="{{ url_for('edit_dish', dish_id=dish.id) }}">Редагувати</a>
+                                <form method="post" action="{{ url_for('delete_dish', dish_id=dish.id) }}"
+                                      onsubmit="return confirm('Видалити страву «{{ dish.name }}»?')">
+                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                                    <button class="danger" type="submit">Видалити</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="5">Страв поки немає.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

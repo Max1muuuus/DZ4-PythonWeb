@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Вхід — Trattoria{% endblock %}
+{% block content %}
+    <section class="auth-page">
+        <h1>Вхід до акаунта</h1>
+        <p class="muted">Увійдіть, використовуючи email та пароль.</p>
+        <form class="form" method="post" action="{{ url_for('login') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+            <label for="email">
+                Email
+                <input id="email" name="email" type="email" autocomplete="email" required>
+            </label>
+            <label for="password">
+                Пароль
+                <input id="password" name="password" type="password"
+                       autocomplete="current-password" required>
+            </label>
+            <button type="submit">Увійти</button>
+        </form>
+        <p class="auth-switch">Ще не маєте акаунта? <a href="{{ url_for('register') }}">Зареєструватися</a></p>
+    </section>
+{% endblock %}

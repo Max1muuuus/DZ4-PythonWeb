@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Доставка — Trattoria{% endblock %}
+{% block content %}
+    <section class="delivery-page">
+        <h1>Замовлення доставки</h1>
+        <p class="muted">Заповніть дані, і ми доставимо ваше замовлення.</p>
+        {% if dishes %}
+            <form class="form" method="post" action="{{ url_for('delivery') }}">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                <label for="customer_name">
+                    Ваше ім'я
+                    <input id="customer_name" name="customer_name" type="text" maxlength="100"
+                           value="{{ form_data.get('customer_name', '') }}" autocomplete="name" required>
+                </label>
+                <label for="phone">
+                    Номер телефону
+                    <input id="phone" name="phone" type="tel" maxlength="32"
+                           value="{{ form_data.get('phone', '') }}" autocomplete="tel" required>
+                </label>
+                <label for="address">
+                    Адреса доставки
+                    <input id="address" name="address" type="text" maxlength="255"
+                           value="{{ form_data.get('address', '') }}" autocomplete="street-address" required>
+                </label>
+                <label for="dish_id">
+                    Страва
+                    <select id="dish_id" name="dish_id" required>
+                        <option value="">Оберіть страву</option>
+                        {% for dish in dishes %}
+                            <option value="{{ dish.id }}"
+                                {% if form_data.get('dish_id', selected_dish_id|string) == dish.id|string %}selected{% endif %}>
+                                {{ dish.name }} — {{ dish.price }} грн
+                            </option>
+                        {% endfor %}
+                    </select>
+                </label>
+                <label for="quantity">
+                    Кількість
+                    <input id="quantity" name="quantity" type="number" min="1" max="99"
+                           value="{{ form_data.get('quantity', '1') or '1' }}" required>
+                </label>
+                <label for="notes">
+                    Коментар до замовлення
+                    <textarea id="notes" name="notes">{{ form_data.get('notes', '') }}</textarea>
+                </label>
+                <button type="submit">Підтвердити замовлення</button>
+            </form>
+        {% else %}
+            <p class="flash error">Наразі немає доступних страв для замовлення.</p>
+        {% endif %}
+    </section>
+{% endblock %}

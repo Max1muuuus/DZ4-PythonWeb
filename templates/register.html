@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Реєстрація — Trattoria{% endblock %}
+{% block content %}
+    <section class="auth-page">
+        <h1>Створити акаунт</h1>
+        <p class="muted">Зареєструйтеся, щоб користуватися можливостями Trattoria.</p>
+        <form class="form" method="post" action="{{ url_for('register') }}">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+            <label for="username">
+                Ім'я користувача
+                <input id="username" name="username" type="text" maxlength="50"
+                       value="{{ username or '' }}" autocomplete="username" required>
+            </label>
+            <label for="email">
+                Email
+                <input id="email" name="email" type="email" maxlength="120"
+                       value="{{ email or '' }}" autocomplete="email" required>
+            </label>
+            <label for="password">
+                Пароль
+                <input id="password" name="password" type="password"
+                       autocomplete="new-password" required>
+            </label>
+            <button type="submit">Зареєструватися</button>
+        </form>
+        <p class="auth-switch">Вже маєте акаунт? <a href="{{ url_for('login') }}">Увійти</a></p>
+    </section>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Редагувати страву' if dish else 'Нова страва' }} — Trattoria{% endblock %}
+{% block content %}
+    <section class="dish-form-page">
+        <h1>{{ 'Редагувати страву' if dish else 'Нова страва' }}</h1>
+        <form class="form" method="post">
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+            <label for="name">
+                Назва
+                <input id="name" name="name" type="text" maxlength="50"
+                       value="{{ form_data.get('name', dish.name if dish else '') }}" required>
+            </label>
+            <label for="description">
+                Опис
+                <textarea id="description" name="description">{{ form_data.get('description', dish.description if dish else '') }}</textarea>
+            </label>
+            <label for="price">
+                Ціна, грн
+                <input id="price" name="price" type="number" min="1"
+                       value="{{ form_data.get('price', dish.price if dish else '') }}" required>
+            </label>
+            <label for="category_id">
+                Категорія
+                <select id="category_id" name="category_id" required>
+                    <option value="">Оберіть категорію</option>
+                    {% for category in categories %}
+                        <option value="{{ category.id }}"
+                            {% if form_data.get('category_id', dish.category_id|string if dish else '') == category.id|string %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label for="emoji">
+                Емодзі
+                <input id="emoji" name="emoji" type="text" maxlength="8"
+                       value="{{ form_data.get('emoji', dish.emoji if dish else '🍽️') }}">
+            </label>
+            <label>
+                <span>Доступна в меню</span>
+                <input name="is_available" type="checkbox"
+                    {% if available_checked %}checked{% endif %}>
+            </label>
+            <button type="submit">Зберегти</button>
+            <a href="{{ url_for('manage_dishes') }}">Скасувати</a>
+        </form>
+    </section>
+{% endblock %}

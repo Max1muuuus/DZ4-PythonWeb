@@ -1,0 +1,6 @@
+{% extends "base.html" %}
+{% block title %}Не знайдено{% endblock %}
+{% block content %}
+    <div class="section-title"><h2>404</h2><p>Такої сторінки або страви немає.</p></div>
+    <p style="text-align:center"><a class="btn" href="{{ url_for('menu') }}">До меню</a></p>
+{% endblock %}

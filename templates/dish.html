@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}{{ dish.name }}{% endblock %}
+{% block content %}
+    <a class="back" href="{{ url_for('menu', slug=dish.category.slug) }}">← {{ dish.category.name }}</a>
+    {% if not dish.is_available %}
+        <p class="flash error">Страва прихована з меню. Ви бачите її як адміністратор.</p>
+    {% endif %}
+    <div class="dish-page">
+        <div class="big-emoji">{{ dish.emoji }}</div>
+        <div>
+            <small class="muted">{{ dish.category.name }}</small>
+            <h1>{{ dish.name }}</h1>
+            <p>{{ dish.description }}</p>
+            <p class="price">{{ dish.price }} грн</p>
+        </div>
+    </div>
+{% endblock %}

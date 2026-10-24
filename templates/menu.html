@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Меню{% endblock %}
+{% block content %}
+    {% if not current and not q %}
+    <section class="hero">
+        <div>
+            <div class="eyebrow">Смачна їжа · Гарний настрій</div>
+            <h1>Де смак<br>зустрічає <span>пристрасть</span></h1>
+            <p>Ласкаво просимо до Trattoria. Кожна страва готується з любов'ю та найкращих інгредієнтів.</p>
+            <div class="hero-actions">
+                <a class="btn" href="#menu">Дивитись меню</a>
+                <a class="btn-outline" href="{{ url_for('delivery') }}">Замовити доставку</a>
+                {% if not current_user.is_authenticated %}
+                    <a class="btn-outline" href="{{ url_for('register') }}">Створити акаунт</a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="hero-art">
+            <div class="plate">🍝</div>
+            <span class="float a">🍕</span>
+            <span class="float b">🍋</span>
+            <span class="float c">🍅</span>
+        </div>
+    </section>
+    {% endif %}
+
+    <div class="section-title" id="menu">
+        <h2>{{ current.name if current else "Наше меню" }}</h2>
+        <p>Добірка найкращих страв від нашого шефа</p>
+    </div>
+
+    <div class="tabs">
+        <a href="{{ url_for('menu') }}" class="{{ 'active' if not current }}">Усе</a>
+        {% for c in categories %}
+            <a href="{{ url_for('menu', slug=c.slug) }}"
+               class="{{ 'active' if current and current.id == c.id }}">{{ c.name }}</a>
+        {% endfor %}
+    </div>
+
+    <form class="search" method="get">
+        <input type="text" name="q" value="{{ q }}" placeholder="Знайти страву...">
+    </form>
+
+    <div class="grid">
+        {% for d in dishes %}
+            <div class="card">
+                <div class="emoji">{{ d.emoji }}</div>
+                <h3><a href="{{ url_for('dish_detail', dish_id=d.id) }}">{{ d.name }}</a></h3>
+                <p class="muted">{{ d.description }}</p>
+                <div class="card-foot">
+                    <p class="price">{{ d.price }} грн</p>
+                    <div class="card-actions">
+                        <a href="{{ url_for('delivery', dish_id=d.id) }}">Замовити</a>
+                        <a class="go" href="{{ url_for('dish_detail', dish_id=d.id) }}" title="Докладніше">→</a>
+                    </div>
+                </div>
+                <small class="muted">{{ d.category.name }}</small>
+            </div>
+        {% else %}
+            <p class="muted">Нічого не знайдено.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
